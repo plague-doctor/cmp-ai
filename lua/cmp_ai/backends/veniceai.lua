@@ -1,14 +1,14 @@
 local requests = require('cmp_ai.requests')
 
-OpenAI = requests:new(nil)
+VeniceAI = requests:new(nil)
 BASE_URL = 'https://api.venice.ai/api/v1/chat/completions'
 
-function OpenAI:new(o, params)
+function VeniceAI:new(o, params)
   o = o or {}
   setmetatable(o, self)
   self.__index = self
   self.params = vim.tbl_deep_extend('keep', params or {}, {
-    model = 'deepseek-coder-v2-lite',
+    model = 'qwen-2.5-qwq-32b',
     temperature = 0.1,
     n = 1,
   })
@@ -26,7 +26,7 @@ function OpenAI:new(o, params)
   return o
 end
 
-function OpenAI:complete(lines_before, lines_after, cb)
+function VeniceAI:complete(lines_before, lines_after, cb)
   if not self.api_key then
     vim.schedule(function()
       vim.notify('OPENAI_API_KEY environment variable not set', vim.log.levels.ERROR)
@@ -72,10 +72,10 @@ Your answer should be:
   end)
 end
 
-function OpenAI:test()
+function VeniceAI:test()
   self:complete('def factorial(n)\n    if', '    return ans\n', function(data)
     dump(data)
   end)
 end
 
-return OpenAI
+return VeniceAI
